@@ -15,7 +15,7 @@
             <input type="email" name="email" placeholder="Email" class="w-full p-2 mb-2 border rounded">
             <input type="password" name="password" placeholder="Password" class="w-full p-2 mb-2 border rounded">
             <input type="password" name="password_confirmation" placeholder="Confirm Password" class="w-full p-2 mb-2 border rounded">
-            <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Sign up</button>
+            <button type="submit" class="w-full bg-black text-white p-2 rounded">Sign up</button>
         </form>
     </div>
 </body>
