@@ -21,3 +21,11 @@ Route::post('/login', [JWTAuthController::class, 'login'])->name('login.post');
 
     Route::get('user', [JWTAuthController::class, 'getUser']);
     Route::post('logout', [JWTAuthController::class, 'logout'])->name("logout");
+
+
+Route::get('/forgetpassword',function () {
+    return view('auth.forget_password');
+})->name('forgetpassword');
+
+
+Route::post('/forgetpassword', [JWTAuthController::class, 'sendResetCode'])->name('password.email');

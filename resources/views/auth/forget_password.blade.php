@@ -8,7 +8,7 @@
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
     <div class="bg-white p-6 rounded shadow-md w-96">
-        <h2 class="text-2xl font-bold mb-4">login</h2>
+        <h2 class="text-2xl font-bold mb-4">forget password</h2>
 
         @if ($errors->has('login'))
             <div class="mb-4 p-2 bg-red-100 border border-red-400 text-red-700 rounded">
@@ -16,12 +16,10 @@
             </div>
         @endif
 
-        <form action="{{ route('login.post') }}" method="POST">
+        <form action="{{ route('password.email') }}" method="POST">
             @csrf
             <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" class="w-full p-2 mb-2 border rounded">
-            <input type="password" name="password" placeholder="Password" class="w-full p-2 mb-2 border rounded">
-            <a class="link mt-4" href="{{route('forgetpassword')}}">forget password</a>
-            <button type="submit" class="w-full bg-black text-white p-2 mt-4  rounded">login</button>
+            <button type="submit" class="w-full bg-black text-white p-2 mt-4  rounded">Send</button>
         </form>
     </div>
 </body>

@@ -15,7 +15,8 @@
             <input type="email" name="email" placeholder="Email" class="w-full p-2 mb-2 border rounded">
             <input type="password" name="password" placeholder="Password" class="w-full p-2 mb-2 border rounded">
             <input type="password" name="password_confirmation" placeholder="Confirm Password" class="w-full p-2 mb-2 border rounded">
-            <button type="submit" class="w-full bg-black text-white p-2 rounded">Sign up</button>
+            <a class="link mt-4" href="{{route('login')}}">you have an account?</a>
+            <button type="submit" class="w-full bg-black text-white p-2 rounded mt-4">Sign up</button>
         </form>
     </div>
 </body>

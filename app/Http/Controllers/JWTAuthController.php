@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use App\Models\PasswordReset;
+use Illuminate\Support\Facades\Mail;
+
 
 
 class JWTAuthController extends Controller
@@ -38,19 +42,35 @@ class JWTAuthController extends Controller
     }
     //-------------
     public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+{
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required'
+    ]);
 
-
-        $user = Auth::user();
-        Auth::login($user);
-
-
+    if (Auth::attempt($credentials)) {
         return redirect()->route('home');
     }
+
+    return back()->withErrors(['login' => 'Incorrect email or password'])->withInput();
+}
+
+public function sendResetCode(Request $request)
+{
+    $request->validate(['email' => 'required|email|exists:users,email']);
+
+    $user = User::where('email', $request->email)->first();
+
+    $code = Str::random(6);
+    PasswordReset::updateOrCreate(
+        ['email' => $user->email],
+        ['token' => $code, 'created_at' => now()]
+    );
+
+    Mail::to($user->email)->send(new \App\Mail\PasswordResetMail($code));
+
+    return response()->json(['message' => 'تم إرسال رمز إعادة التعيين إلى بريدك الإلكتروني.']);
+}
 
     public function logout()
     {
