@@ -67,10 +67,49 @@ public function sendResetCode(Request $request)
         ['token' => $code, 'created_at' => now()]
     );
 
-    Mail::to($user->email)->send(new \App\Mail\PasswordResetMail($code));
-
-    return response()->json(['message' => 'تم إرسال رمز إعادة التعيين إلى بريدك الإلكتروني.']);
+    try {
+        Mail::to($user->email)->send(new \App\Mail\PasswordResetMail($code));
+        session(['reset_email' => $user->email]); 
+        return redirect()->route('resetpassword')->with('success', 'A reset code has been sent to your email');
+    } catch (\Exception $e) {
+        return back()->with('error', 'There was a problem sending the email. Please try again');
+    }
 }
+
+public function resetPassword(Request $request)
+{
+    $email = session('reset_email'); 
+
+    if (!$email) {
+        return redirect()->route('password.request')->with('error', 'Session has expired. Please resubmit your request for reset');
+    }
+
+    $request->validate([
+        'code' => 'required|string',
+        'password' => 'required|string|min:6|confirmed',
+    ]);
+
+    $passwordReset = PasswordReset::where('email', $email)
+                                  ->where('token', $request->code)
+                                  ->first();
+
+    if (!$passwordReset) {
+        return back()->with('error', 'The code you entered is incorrect or expired');
+    }
+
+    $user = User::where('email', $email)->first();
+    $user->password = Hash::make($request->password);
+    $user->save();
+
+    session()->forget('reset_email'); 
+    $passwordReset->delete();
+
+    return redirect()->route('login')->with('success', 'Password reset successful! You can now log in');
+}
+
+
+
+
 
     public function logout()
     {
